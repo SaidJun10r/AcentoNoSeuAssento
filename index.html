@@ -1,0 +1,852 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Acento no Lugar Certo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap">
+<style>
+/* Layout: caderno de estudo — coluna de leitura de ~68ch, palavras "marcadas com marca-texto" na sílaba tônica; prática em abas abaixo da teoria. */
+:root{
+  --paper:#F3F5FA; --surface:#FFFFFF; --ink:#16203A; --muted:#58617A; --line:#D9DEEA;
+  --accent:#2944C4; --accent-soft:#E4E9FB; --mark:#FFE15A; --mark-ink:#16203A;
+  --ok:#1C7F46; --ok-bg:#E1F3E8; --bad:#BC3328; --bad-bg:#FBE5E2;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-text:"Literata", Georgia, "Times New Roman", serif;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#10131C; --surface:#181C28; --ink:#E6E9F2; --muted:#A1A8BC; --line:#2B3145;
+  --accent:#95A8FF; --accent-soft:#222A47; --mark:#E2C43A; --mark-ink:#10131C;
+  --ok:#62D394; --ok-bg:#14301F; --bad:#FF8C80; --bad-bg:#3A1A17; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#10131C; --surface:#181C28; --ink:#E6E9F2; --muted:#A1A8BC; --line:#2B3145;
+  --accent:#95A8FF; --accent-soft:#222A47; --mark:#E2C43A; --mark-ink:#10131C;
+  --ok:#62D394; --ok-bg:#14301F; --bad:#FF8C80; --bad-bg:#3A1A17; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-text);font-size:17px;line-height:1.65;padding-inline:16px}
+.wrap{max-width:980px;margin:0 auto}
+.read{max-width:44rem}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+h2{font-size:clamp(1.6rem,3.6vw,2.1rem);font-weight:800;letter-spacing:-.01em}
+h3{font-size:1.2rem;font-weight:700;margin-top:1.6rem}
+p{margin:.7rem 0}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--f-display);font-size:.78rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--accent)}
+.muted{color:var(--muted)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+/* marca-texto na sílaba tônica */
+.w{display:inline-flex;align-items:baseline;font-family:var(--f-display);font-weight:600;white-space:nowrap}
+.w .s+.s::before{content:"·";color:var(--muted);font-weight:400;padding:0 .08em}
+.w .t{background:linear-gradient(transparent 18%,var(--mark) 18% 88%,transparent 88%);color:var(--mark-ink);border-radius:2px;padding:0 .06em}
+.mk{background:linear-gradient(transparent 18%,var(--mark) 18% 88%,transparent 88%);color:var(--mark-ink);padding:0 .1em}
+
+/* topo */
+header.hero{padding-block:3rem 2rem}
+.hero h1{font-size:clamp(2.4rem,7vw,4.4rem);font-weight:800;letter-spacing:-.025em}
+.hero h1 .acc{color:var(--accent)}
+.hero .lede{font-size:1.15rem;max-width:40rem;color:var(--muted)}
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:1.6rem}
+.trio .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.trio .big{font-family:var(--f-display);font-size:clamp(1.6rem,4.5vw,2.3rem);font-weight:800}
+.trio .card small{display:block;color:var(--muted);font-size:.9rem;line-height:1.4;margin-top:.3rem}
+.trio-cap{margin-top:.8rem;font-style:italic;color:var(--muted)}
+@media (max-width:620px){.trio{grid-template-columns:1fr}}
+
+/* navegação */
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--line);margin-inline:-16px;padding:10px 16px}
+nav.toc ul{list-style:none;margin:0 auto;padding:0;display:flex;gap:6px;overflow-x:auto;max-width:980px;scrollbar-width:thin}
+nav.toc a{display:block;white-space:nowrap;font-family:var(--f-display);font-size:.88rem;font-weight:500;text-decoration:none;color:var(--ink);padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface)}
+nav.toc a:hover{border-color:var(--accent);color:var(--accent)}
+nav.toc a.go{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+
+section.chap{padding-block:3rem 1rem;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+.chap-head{display:flex;gap:14px;align-items:baseline;margin-bottom:.6rem}
+.chap-num{font-family:var(--f-display);font-weight:800;font-size:1rem;color:var(--accent);min-width:2ch}
+
+/* tabelas */
+.tbl{overflow-x:auto;margin:1.2rem 0;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:.98rem}
+th,td{padding:12px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{font-family:var(--f-display);font-weight:700;font-size:.88rem;background:var(--accent-soft)}
+td .tag{font-family:var(--f-display);font-weight:700;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;display:inline-block;margin-bottom:4px}
+.yes{color:var(--ok)} .no{color:var(--bad)}
+
+/* caixas */
+.tip{background:var(--accent-soft);border-radius:var(--r);padding:14px 18px;margin:1.2rem 0}
+.tip strong{font-family:var(--f-display)}
+.warn{border:1.5px dashed var(--line);border-radius:var(--r);padding:14px 18px;margin:1.2rem 0}
+.group{display:inline-block;font-family:var(--f-display);font-weight:800;letter-spacing:.06em;background:var(--ink);color:var(--paper);padding:.15em .6em;border-radius:6px;font-size:.95em}
+.chips{display:flex;flex-wrap:wrap;gap:8px 14px;margin:.6rem 0 1rem}
+.chips .w{font-size:1.08rem}
+.endings{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin:1rem 0}
+.endings div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;min-width:0}
+.endings b{font-family:var(--f-display);font-size:1.05rem;color:var(--accent);display:block}
+.endings span{font-size:.95rem}
+.pairs{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin:1rem 0}
+.pairs div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 14px;min-width:0}
+.pairs .w{font-size:1.15rem}
+.pairs small{display:block;color:var(--muted);line-height:1.4}
+
+/* espelho */
+.mirror{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin:1.4rem 0;background:var(--surface)}
+.mirror>div{padding:16px 18px;min-width:0}
+.mirror .hd{font-family:var(--f-display);font-weight:700;font-size:.9rem;background:var(--accent-soft)}
+.mirror .row-label{grid-column:1/-1;font-family:var(--f-display);font-weight:800;font-size:1.05rem;border-top:1px solid var(--line);padding-bottom:0}
+.mirror .verdict{font-family:var(--f-display);font-weight:700;display:block;margin-bottom:6px}
+.mirror .when{display:none;font-size:.85rem;color:var(--muted)}
+.mirror .cell{border-top:1px dashed var(--line)}
+.mirror .cell + .cell{border-left:1px solid var(--line)}
+@media (max-width:560px){.mirror{grid-template-columns:1fr}.mirror .cell + .cell{border-left:0}.mirror .hd{display:none}.mirror .when{display:block;margin:-4px 0 4px}}
+
+/* fluxo */
+ol.flow{list-style:none;padding:0;margin:1.4rem 0;display:grid;gap:10px;counter-reset:f}
+ol.flow li{counter-increment:f;display:grid;grid-template-columns:2.4rem minmax(0,1fr);gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+ol.flow li::before{content:counter(f);font-family:var(--f-display);font-weight:800;font-size:1.3rem;width:2.2rem;height:2.2rem;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:var(--surface)}
+ol.flow b{font-family:var(--f-display)}
+ol.flow p{margin:.2rem 0}
+
+/* exercícios */
+#pratica{padding-block:3rem 2rem;scroll-margin-top:64px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:1.2rem 0 1rem}
+.tab{font-family:var(--f-display);font-size:.92rem;font-weight:600;padding:8px 13px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.tab:hover{border-color:var(--accent)}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tab .badge{font-size:.75rem;font-weight:700;padding:1px 7px;border-radius:999px;background:var(--ok-bg);color:var(--ok)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:clamp(16px,3vw,28px)}
+.panel-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:1rem}
+.panel-head h3{margin:0;font-size:1.35rem}
+.panel-head p{margin:.3rem 0 0;color:var(--muted);max-width:36rem}
+.score{font-family:var(--f-display);text-align:right;min-width:140px}
+.score .n{font-size:1.6rem;font-weight:800;font-variant-numeric:tabular-nums}
+.score .l{font-size:.8rem;color:var(--muted)}
+.bar{height:6px;border-radius:999px;background:var(--line);overflow:hidden;margin:6px 0 0}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+ol.qs{list-style:none;padding:0;margin:0;display:grid;gap:12px;counter-reset:q}
+ol.qs>li{counter-increment:q;border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;background:var(--paper)}
+ol.qs>li.right{border-color:var(--ok)} ol.qs>li.wrong{border-color:var(--bad)}
+.q-prompt{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.q-prompt::before{content:counter(q)".";font-family:var(--f-display);font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.q-word{font-family:var(--f-display);font-size:1.45rem;font-weight:700}
+.q-ctx{font-size:1.05rem}
+.q-ctx .blank{display:inline-block;min-width:3.2em;border-bottom:2px solid var(--accent);text-align:center;font-family:var(--f-display);font-weight:700;color:var(--accent)}
+.q-hint{font-size:.92rem;color:var(--muted);font-style:italic}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.opt{font-family:var(--f-display);font-size:1rem;font-weight:600;padding:8px 14px;border-radius:8px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;text-align:left;line-height:1.3;max-width:100%}
+.opt:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt.is-right{border-color:var(--ok);background:var(--ok-bg);color:var(--ok)}
+.opt.is-wrong{border-color:var(--bad);background:var(--bad-bg);color:var(--bad);text-decoration:line-through}
+.opt.dim{opacity:.55}
+.syl-opts .opt{font-size:1.35rem;min-width:3.2rem;text-align:center}
+.inrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.inrow input{font-family:var(--f-display);font-size:1.2rem;padding:8px 12px;border-radius:8px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);min-width:0;flex:1 1 180px;max-width:280px}
+.inrow input:focus{border-color:var(--accent);outline:none}
+.inrow button{font-family:var(--f-display);font-weight:700;padding:8px 16px;border-radius:8px;border:0;background:var(--accent);color:var(--surface);cursor:pointer}
+.inrow button:disabled{opacity:.5;cursor:default}
+.keypad{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px;align-items:center}
+.keypad span{font-size:.85rem;color:var(--muted);margin-right:4px}
+.keypad button{font-family:var(--f-display);font-size:1.1rem;font-weight:600;width:2.4rem;height:2.4rem;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.keypad button:hover{border-color:var(--accent)}
+.fb{margin-top:10px;font-size:.98rem;line-height:1.5;padding:8px 12px;border-radius:8px}
+.fb.ok{background:var(--ok-bg)} .fb.bad{background:var(--bad-bg)}
+.fb b{font-family:var(--f-display)}
+.fb .v{font-family:var(--f-display);font-weight:800}
+.fb.ok .v{color:var(--ok)} .fb.bad .v{color:var(--bad)}
+.done{margin-top:16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:var(--r);background:var(--accent-soft)}
+.done p{margin:0;font-family:var(--f-display);font-weight:600}
+.btn{font-family:var(--f-display);font-weight:700;font-size:.95rem;padding:9px 16px;border-radius:8px;border:1.5px solid var(--accent);background:var(--accent);color:var(--surface);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent)}
+.panel-foot{display:flex;justify-content:flex-end;margin-top:14px}
+
+/* cola */
+.cola{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:1.2rem}
+.cola div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;min-width:0}
+.cola h4{font-size:1rem;margin-bottom:.3rem}
+.cola p{margin:0;font-size:.95rem;line-height:1.5}
+footer{padding-block:2rem 3rem;color:var(--muted);font-size:.9rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+</style>
+
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">Português brasileiro · Novo Acordo Ortográfico</div>
+  <h1>Acento no lugar <span class="acc">certo</span></h1>
+  <p class="lede">Um jeito intuitivo de saber quando e onde acentuar. Em vez de decorar listas, você vai entender o padrão da língua e perceber que o acento só aparece quando a palavra foge dele.</p>
+  <div class="trio">
+    <div class="card"><div class="big"><span class="w" data-s="sa-bi-Á"></span></div><small>o pássaro · oxítona</small></div>
+    <div class="card"><div class="big"><span class="w" data-s="SÁ-bia"></span></div><small>uma mulher sábia · a força no começo</small></div>
+    <div class="card"><div class="big"><span class="w" data-s="sa-BI-a"></span></div><small>verbo saber (ele sabia) · paroxítona</small></div>
+  </div>
+  <p class="trio-cap">As mesmas letras, três palavras diferentes. O acento diz ao leitor onde está a força.</p>
+</header>
+</div>
+
+<nav class="toc" aria-label="Seções">
+  <ul>
+    <li><a href="#tonica">1 · Sílaba tônica</a></li>
+    <li><a href="#espelho">2 · A regra do espelho</a></li>
+    <li><a href="#proparoxitonas">3 · Proparoxítonas</a></li>
+    <li><a href="#oxitonas">4 · Oxítonas e monossílabos</a></li>
+    <li><a href="#paroxitonas">5 · Paroxítonas</a></li>
+    <li><a href="#especiais">6 · Casos especiais</a></li>
+    <li><a href="#sinal">7 · Agudo ou circunflexo</a></li>
+    <li><a href="#crase">8 · Crase</a></li>
+    <li><a href="#fluxo">Passo a passo</a></li>
+    <li><a href="#pratica" class="go">Exercícios</a></li>
+    <li><a href="#cola">Cola</a></li>
+  </ul>
+</nav>
+
+<main class="wrap">
+
+<section class="chap" id="tonica">
+ <div class="read">
+  <div class="chap-head"><span class="chap-num">1</span><h2>Ache a sílaba tônica</h2></div>
+  <p>Toda palavra com mais de uma sílaba tem uma que é pronunciada com mais força: a <strong>sílaba tônica</strong>. Neste material ela aparece marcada como se fosse com marca-texto: <span class="w" data-s="ca-FÉ"></span>, <span class="w" data-s="ME-sa"></span>, <span class="w" data-s="LÂM-pa-da"></span>. Acentuar começa sempre aqui.</p>
+  <h3>Três truques para encontrá-la</h3>
+  <p><strong>Chame a palavra de longe.</strong> Fale como se estivesse gritando alguém do outro lado da rua: "ca-FÉÉÉ!", "MEEE-sa!". A sílaba que você estica sem querer é a tônica.</p>
+  <p><strong>Teste a força em outro lugar.</strong> Diga "me-SA" ou "ca-NE-ta" com a força trocada (ca-ne-TA). Soa estranho? Então a versão natural é a certa.</p>
+  <p><strong>Conte de trás para frente.</strong> A posição da tônica, contada a partir do fim, dá o nome da palavra:</p>
+ </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Tônica na…</th><th>Nome</th><th>Exemplos</th></tr></thead>
+    <tbody>
+      <tr><td>última sílaba</td><td><b>oxítona</b></td><td><div class="chips"><span class="w" data-s="ca-FÉ"></span><span class="w" data-s="a-MOR"></span><span class="w" data-s="u-ru-BU"></span><span class="w" data-s="pa-PEL"></span></div></td></tr>
+      <tr><td>penúltima</td><td><b>paroxítona</b></td><td><div class="chips"><span class="w" data-s="ME-sa"></span><span class="w" data-s="LÁ-pis"></span><span class="w" data-s="a-ÇÚ-car"></span><span class="w" data-s="ca-NE-ta"></span></div></td></tr>
+      <tr><td>antepenúltima</td><td><b>proparoxítona</b></td><td><div class="chips"><span class="w" data-s="LÂM-pa-da"></span><span class="w" data-s="MÉ-di-co"></span><span class="w" data-s="Ô-ni-bus"></span></div></td></tr>
+    </tbody>
+  </table></div>
+ <div class="read">
+  <p>Palavras de uma sílaba só são <strong>monossílabos</strong>. Elas podem ser <em>tônicos</em>, com som forte e sentido próprio (pé, mês, sol, mar), ou <em>átonos</em>, que se apoiam na palavra seguinte (de, o, se, que, me). Só os tônicos podem levar acento.</p>
+  <div class="tip"><strong>Cuidado com as pegadinhas de pronúncia.</strong> Algumas palavras são faladas errado com frequência: <span class="w" data-s="ru-BRI-ca"></span> (e não "rúbrica"), <span class="w" data-s="re-COR-de"></span>, <span class="w" data-s="gra-TUI-to"></span>, <span class="w" data-s="ru-IM"></span>, <span class="w" data-s="No-BEL"></span>, <span class="w" data-s="pro-TÓ-ti-po"></span>. Se a pronúncia está errada, a acentuação também sai errada.</div>
+ </div>
+</section>
+
+<section class="chap" id="espelho">
+ <div class="read">
+  <div class="chap-head"><span class="chap-num">2</span><h2>A ideia central: o acento marca a exceção</h2></div>
+  <p>O português tem um padrão de pronúncia. Leia em voz alta: <em>casa, gente, menino, homem, jovens</em>. Todas têm a força na penúltima sílaba. Agora: <em>tatu, amor, papel, feliz, jardim</em>. Todas têm a força na última.</p>
+  <p>Isso não é coincidência. Palavras terminadas em <span class="group">A · E · O · EM · ENS</span> (com ou sem <b>s</b>) tendem a ser <strong>paroxítonas</strong>. Palavras terminadas em qualquer outra coisa (i, u, r, l, z, x, n, im, um…) tendem a ser <strong>oxítonas</strong>.</p>
+  <p>Quando a palavra segue esse padrão, qualquer leitor acerta a pronúncia sozinho, e ela <strong>não precisa de acento</strong>. O acento aparece quando a palavra <strong>foge do padrão</strong>. Ele funciona como um aviso: "a força está aqui, e não onde você esperaria".</p>
+ </div>
+  <div class="mirror" role="table" aria-label="A regra do espelho">
+    <div class="hd" role="columnheader">Termina em a, e, o, em, ens (+s)</div>
+    <div class="hd" role="columnheader">Termina em qualquer outra coisa</div>
+    <div class="row-label">Oxítona</div>
+    <div class="cell"><span class="verdict yes">✓ Leva acento</span><span class="when">termina em a, e, o, em, ens</span><div class="chips"><span class="w" data-s="so-FÁ"></span><span class="w" data-s="ca-FÉ"></span><span class="w" data-s="a-VÔ"></span><span class="w" data-s="tam-BÉM"></span><span class="w" data-s="pa-ra-BÉNS"></span></div></div>
+    <div class="cell"><span class="verdict no">✗ Não leva</span><span class="when">termina em outra letra</span><div class="chips"><span class="w" data-s="ca-JU"></span><span class="w" data-s="a-ba-ca-XI"></span><span class="w" data-s="a-MOR"></span><span class="w" data-s="pa-PEL"></span><span class="w" data-s="fe-LIZ"></span></div></div>
+    <div class="row-label">Paroxítona</div>
+    <div class="cell"><span class="verdict no">✗ Não leva</span><span class="when">termina em a, e, o, em, ens</span><div class="chips"><span class="w" data-s="CA-sa"></span><span class="w" data-s="LI-vro"></span><span class="w" data-s="I-tem"></span><span class="w" data-s="JO-vens"></span><span class="w" data-s="i-DEI-a"></span></div></div>
+    <div class="cell"><span class="verdict yes">✓ Leva acento</span><span class="when">termina em outra letra</span><div class="chips"><span class="w" data-s="FÁ-cil"></span><span class="w" data-s="LÁ-pis"></span><span class="w" data-s="a-ÇÚ-car"></span><span class="w" data-s="TÓ-rax"></span><span class="w" data-s="ÁL-bum"></span></div></div>
+  </div>
+ <div class="read">
+  <p>As duas regras são o reflexo uma da outra no espelho. Sabendo a regra das oxítonas, você já sabe a das paroxítonas: é só inverter.</p>
+  <div class="tip"><strong>E as proparoxítonas?</strong> Para elas não existe padrão nenhum, então a regra é a mais fácil de todas: <strong>todas levam acento</strong>.</div>
+  <p>Repare como o acento muda a palavra inteira: <span class="w" data-s="PÚ-bli-co"></span> (o público), <span class="w" data-s="pu-BLI-co"></span> (eu publico), <span class="w" data-s="pu-bli-COU"></span> (ele publicou). <em>Publico</em> termina em o e é paroxítona: está no padrão, sem acento. <em>Público</em> é proparoxítona: acento.</p>
+ </div>
+</section>
+
+<section class="chap" id="proparoxitonas">
+ <div class="read">
+  <div class="chap-head"><span class="chap-num">3</span><h2>Proparoxítonas: todas acentuadas</h2></div>
+  <p>Se a força cai na antepenúltima sílaba, acentue. Sem exceção.</p>
+  <div class="chips"><span class="w" data-s="LÂM-pa-da"></span><span class="w" data-s="MÉ-di-co"></span><span class="w" data-s="Ô-ni-bus"></span><span class="w" data-s="PÁS-sa-ro"></span><span class="w" data-s="ma-te-MÁ-ti-ca"></span><span class="w" data-s="SÁ-ba-do"></span><span class="w" data-s="ÚL-ti-mo"></span><span class="w" data-s="XÍ-ca-ra"></span><span class="w" data-s="ÁR-vo-re"></span><span class="w" data-s="PÚ-bli-co"></span></div>
+  <h3>As que terminam em ditongo crescente</h3>
+  <p>Palavras como <em>história, série, água, mágoa, tênue, gênio, pátria</em> terminam em <b>ia, ie, io, ua, ue, uo</b>. Pronuncie bem devagar: <span class="w" data-s="his-TÓ-ri-a"></span>, <span class="w" data-s="SÉ-ri-e"></span>, <span class="w" data-s="Á-gu-a"></span>. Soa como proparoxítona, e é assim que você deve tratá-las: <strong>sempre levam acento</strong>.</p>
+  <p class="muted">Algumas gramáticas chamam essas palavras de "paroxítonas terminadas em ditongo" e outras de "proparoxítonas eventuais". O nome muda, a regra é a mesma: acento.</p>
+ </div>
+</section>
+
+<section class="chap" id="oxitonas">
+ <div class="read">
+  <div class="chap-head"><span class="chap-num">4</span><h2>Oxítonas e monossílabos tônicos</h2></div>
+  <h3>Oxítonas</h3>
+  <p>Levam acento quando terminam em <span class="group">A · E · O · EM · ENS</span> (com ou sem s).</p>
+  <div class="chips"><span class="w" data-s="so-FÁ"></span><span class="w" data-s="Pa-ra-NÁ"></span><span class="w" data-s="vo-CÊ"></span><span class="w" data-s="ca-FÉS"></span><span class="w" data-s="ci-PÓ"></span><span class="w" data-s="a-VÔ"></span><span class="w" data-s="tam-BÉM"></span><span class="w" data-s="ar-ma-ZÉM"></span><span class="w" data-s="pa-ra-BÉNS"></span><span class="w" data-s="nin-GUÉM"></span></div>
+  <p>Terminadas em outras letras ficam sem acento:</p>
+  <div class="chips"><span class="w" data-s="ca-JU"></span><span class="w" data-s="u-ru-BU"></span><span class="w" data-s="a-ba-ca-XI"></span><span class="w" data-s="a-MOR"></span><span class="w" data-s="pa-PEL"></span><span class="w" data-s="fe-LIZ"></span><span class="w" data-s="jar-DIM"></span><span class="w" data-s="a-TUM"></span></div>
+  <div class="tip"><strong>Verbo com pronome.</strong> Quando o verbo encontra o, a, os, as, ele perde o r e vira oxítona. Aplique a regra normalmente: amar + o → <span class="w" data-s="a-MÁ-lo"></span>; vender + a → <span class="w" data-s="ven-DÊ-la"></span>; compor + o → <span class="w" data-s="com-PÔ-lo"></span>; partir + o → <span class="w" data-s="par-TI-lo"></span> (termina em i, sem acento).</div>
+  <h3>Monossílabos tônicos</h3>
+  <p>Levam acento quando terminam em <span class="group">A · E · O</span> (com ou sem s).</p>
+  <div class="chips"><span class="w" data-s="PÁ"></span><span class="w" data-s="JÁ"></span><span class="w" data-s="PÉ"></span><span class="w" data-s="MÊS"></span><span class="w" data-s="TRÊS"></span><span class="w" data-s="NÓ"></span><span class="w" data-s="PÓ"></span><span class="w" data-s="PÔS"></span></div>
+  <p>Sem acento: <em>mim, ti, nu, sol, mar, cruz, bom, tem, vem, bem, sem</em>. E os átonos (a, o, de, se, que, me) nunca levam.</p>
+  <p class="muted">Por que "em" não entra na lista dos monossílabos? Porque <em>tem, vem, bem, trem</em> já são lidos corretamente sem ajuda. O acento de <em>têm</em> e <em>vêm</em> é outra coisa: é o acento diferencial, que aparece na seção 6.</p>
+ </div>
+</section>
+
+<section class="chap" id="paroxitonas">
+ <div class="read">
+  <div class="chap-head"><span class="chap-num">5</span><h2>Paroxítonas</h2></div>
+  <p>São a maioria das palavras do português, por isso quase nunca levam acento. Pela regra do espelho, recebem acento quando terminam <strong>fora</strong> do grupo <span class="group">A · E · O · EM · ENS</span>. Na prática, as terminações são estas:</p>
+ </div>
+  <div class="endings">
+    <div><b>-l</b><span>fácil, útil, amável, túnel</span></div>
+    <div><b>-n</b><span>hífen, pólen, abdômen</span></div>
+    <div><b>-r</b><span>açúcar, caráter, revólver</span></div>
+    <div><b>-x</b><span>tórax, látex, fênix</span></div>
+    <div><b>-ps</b><span>bíceps, fórceps</span></div>
+    <div><b>-i, -is</b><span>júri, táxi, lápis, tênis</span></div>
+    <div><b>-us</b><span>vírus, bônus, Vênus</span></div>
+    <div><b>-um, -uns</b><span>álbum, álbuns, fórum</span></div>
+    <div><b>-ã(s), -ão(s)</b><span>ímã, órfã, órgão, bênção</span></div>
+    <div><b>-on, -ons</b><span>próton, nêutrons</span></div>
+    <div><b>ditongo (+s)</b><span>jóquei, vôlei, pônei, fáceis, túneis</span></div>
+  </div>
+ <div class="read">
+  <p>No padrão, sem acento: <em>casa, mesa, livro, item, itens, jovem, ideia, heroico</em>.</p>
+  <div class="warn"><strong>O plural pode tirar o acento.</strong> <span class="w" data-s="HÍ-fen"></span> termina em n e leva acento, mas <span class="w" data-s="HI-fens"></span> termina em ens e fica sem. O mesmo vale para pólen → polens e abdômen → abdomens. A força continua no mesmo lugar, só a terminação mudou de grupo.</div>
+ </div>
+</section>
+
+<section class="chap" id="especiais">
+ <div class="read">
+  <div class="chap-head"><span class="chap-num">6</span><h2>Casos especiais</h2></div>
+  <p>As regras anteriores resolvem quase tudo. Estes casos completam o quadro.</p>
+
+  <h3>6a · Hiato com i e u tônicos</h3>
+  <p>Quando o <b>i</b> ou o <b>u</b> tônico vem logo depois de outra vogal, mas em sílaba separada, ele recebe acento agudo. O acento avisa que as vogais não formam ditongo. A condição: o i ou u precisa ficar <strong>sozinho na sílaba, ou acompanhado só de s</strong>.</p>
+  <div class="chips"><span class="w" data-s="sa-Ú-de"></span><span class="w" data-s="sa-Í-da"></span><span class="w" data-s="ba-Ú"></span><span class="w" data-s="pa-ÍS"></span><span class="w" data-s="e-go-ÍS-ta"></span><span class="w" data-s="vi-Ú-va"></span><span class="w" data-s="con-te-Ú-do"></span><span class="w" data-s="Pi-au-Í"></span></div>
+ </div>
+  <div class="pairs">
+    <div><span class="w" data-s="pa-ÍS"></span> × <span class="w" data-s="PAIS"></span><small>hiato (a nação) × ditongo (pai e mãe)</small></div>
+    <div><span class="w" data-s="ra-IZ"></span> → <span class="w" data-s="ra-Í-zes"></span><small>com z na sílaba não leva; sozinho, leva</small></div>
+    <div><span class="w" data-s="ju-IZ"></span> → <span class="w" data-s="ju-Í-zes"></span><small>mesma lógica de raiz e raízes</small></div>
+  </div>
+ <div class="read">
+  <p><strong>Não leva acento quando:</strong></p>
+  <ul>
+    <li>a sílaba tem outra letra além de s: <em>ra-iz, ju-iz, ca-ir, Ra-ul, ru-im, a-in-da</em>;</li>
+    <li>vem <b>nh</b> depois: <em>ra-i-nha, mo-i-nho, ba-i-nha</em>;</li>
+    <li>a vogal se repete: <em>xi-i-ta, va-di-i-ce</em>;</li>
+    <li>é paroxítona e o i/u vem depois de ditongo (mudou com o Novo Acordo): <em>fei-u-ra, bai-u-ca, bo-cai-u-va</em>. Nas oxítonas o acento continua: <em>Piauí, tuiuiú</em>.</li>
+  </ul>
+
+  <h3>6b · Ditongos abertos éi, éu, ói</h3>
+  <p>Levam acento <strong>só em oxítonas e monossílabos</strong>:</p>
+  <div class="chips"><span class="w" data-s="pa-PÉIS"></span><span class="w" data-s="a-NÉIS"></span><span class="w" data-s="CÉU"></span><span class="w" data-s="cha-PÉU"></span><span class="w" data-s="tro-FÉU"></span><span class="w" data-s="he-RÓI"></span><span class="w" data-s="DÓI"></span><span class="w" data-s="cons-TRÓI"></span></div>
+  <p>Nas paroxítonas, o Novo Acordo tirou o acento. Repare que isso combina com a regra do espelho, já que elas terminam em a ou o:</p>
+  <div class="chips"><span class="w" data-s="i-DEI-a"></span><span class="w" data-s="as-sem-BLEI-a"></span><span class="w" data-s="pla-TEI-a"></span><span class="w" data-s="ji-BOI-a"></span><span class="w" data-s="he-ROI-co"></span><span class="w" data-s="BOI-a"></span><span class="w" data-s="es-TREI-a"></span></div>
+
+  <h3>6c · Hiatos ee e oo</h3>
+  <p>Não levam mais acento: <em>voo, enjoo, perdoo, abençoo, creem, deem, leem, veem, releem</em>.</p>
+
+  <h3>6d · Acento diferencial</h3>
+  <p>Serve para diferenciar palavras que seriam escritas igual. Depois do Novo Acordo, sobraram estes:</p>
+ </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Com acento</th><th>Sem acento</th><th>Exemplo</th></tr></thead>
+    <tbody>
+      <tr><td><b>pôde</b> (passado)</td><td>pode (presente)</td><td>Ontem ele não pôde vir; hoje ele pode.</td></tr>
+      <tr><td><b>pôr</b> (verbo)</td><td>por (preposição)</td><td>Vou pôr a mesa. Passei por aqui.</td></tr>
+      <tr><td><b>têm, vêm</b> (eles)</td><td>tem, vem (ele)</td><td>Eles têm pressa e vêm de carro.</td></tr>
+      <tr><td><b>contêm, mantêm, detêm, obtêm, retêm, provêm, intervêm</b> (eles)</td><td>contém, mantém, detém, obtém… (ele)</td><td>A caixa contém livros. As caixas contêm livros.</td></tr>
+    </tbody>
+  </table></div>
+ <div class="read">
+  <div class="tip"><strong>Não confunda vêm com veem.</strong> <em>Vêm</em> vem do verbo <b>vir</b> (eles vêm amanhã). <em>Veem</em> vem do verbo <b>ver</b> (eles veem o filme), e é um hiato ee, sem acento.</div>
+  <p><strong>Acentos diferenciais que caíram:</strong> para (verbo parar), pelo (cabelo), pela, polo, pera. Escreva: <em>O trânsito para às 18h. O cachorro soltou muito pelo.</em></p>
+  <p class="muted">Facultativos: fôrma (de bolo) / forma, e dêmos (subjuntivo) / demos.</p>
+
+  <h3>6e · Trema e o u de gue, gui, que, qui</h3>
+  <p>O trema foi abolido: <em>linguiça, frequente, cinquenta, tranquilo, aguentar</em>. Ele só continua em nomes estrangeiros e seus derivados, como <em>Müller</em> e <em>mülleriano</em>. Também caiu o acento no u tônico desses grupos: <em>averigue, apazigue, argui</em> (antes: averigúe, apazigúe, argúi).</p>
+ </div>
+</section>
+
+<section class="chap" id="sinal">
+ <div class="read">
+  <div class="chap-head"><span class="chap-num">7</span><h2>Agudo ou circunflexo?</h2></div>
+  <p>Depois de decidir <em>se</em> a palavra leva acento, escolha <em>qual</em> pelo som da vogal tônica.</p>
+ </div>
+  <div class="pairs">
+    <div><span class="q-word">´ agudo</span><small>vogal <b>aberta</b> (é, ó, á) e sempre em i e u: café, avó, cipó, médico, sofá, saúde, júri</small></div>
+    <div><span class="q-word">^ circunflexo</span><small>vogal <b>fechada</b> (ê, ô, â): você, avô, ônibus, lâmpada, três</small></div>
+    <div><span class="q-word">~ til</span><small>marca <b>som nasal</b>, não força: mãe, irmão, maçã. Pode aparecer junto com outro acento: órgão, ímã</small></div>
+  </div>
+ <div class="read">
+  <p>O par clássico: <span class="w" data-s="a-VÓ"></span> (som aberto, a mãe do pai) e <span class="w" data-s="a-VÔ"></span> (som fechado, o pai do pai).</p>
+  <div class="tip"><strong>Dica do português brasileiro:</strong> antes de <b>m</b>, <b>n</b> e <b>nh</b>, a vogal tônica costuma soar fechada, então usa circunflexo: <em>ônibus, cômodo, Antônio, econômico, gêmeo, pânico, tênis</em>. Em Portugal se escreve António e económico, porque lá a pronúncia é aberta.</div>
+  <p>O acento grave (`) não marca sílaba tônica. Ele só existe para indicar crase.</p>
+ </div>
+</section>
+
+<section class="chap" id="crase">
+ <div class="read">
+  <div class="chap-head"><span class="chap-num">8</span><h2>Crase</h2></div>
+  <p>A crase é a fusão de dois "a": a preposição <b>a</b> com o artigo <b>a</b> (ou com o a de aquele, aquela, aquilo). O acento grave marca essa fusão: <em>vou a + a escola = vou à escola</em>.</p>
+  <h3>Truque do masculino</h3>
+  <p>Troque a palavra feminina por uma masculina. Se aparecer <b>ao</b>, tem crase.</p>
+ </div>
+  <div class="pairs">
+    <div><b>Vou à escola.</b><small>Vou <span class="mk">ao</span> colégio → tem crase</small></div>
+    <div><b>Assisti à peça.</b><small>Assisti <span class="mk">ao</span> filme → tem crase</small></div>
+    <div><b>Comprei a blusa.</b><small>Comprei <span class="mk">o</span> casaco → sem crase</small></div>
+  </div>
+ <div class="read">
+  <h3>Truque do lugar</h3>
+  <p>Para nomes de lugar, troque "vou a" por "volto de". <em>Se vou a e volto da, crase há. Se vou a e volto de, crase pra quê?</em></p>
+  <p>Volto <b>da</b> Bahia → Vou <b>à</b> Bahia. Volto <b>de</b> Curitiba → Vou <b>a</b> Curitiba.</p>
+  <h3>Sempre tem crase</h3>
+  <ul>
+    <li>em horas exatas: <em>às 10h, à meia-noite, das 8h às 18h</em>;</li>
+    <li>em "à moda de", mesmo escondido: <em>bife à milanesa, arroz à grega</em>;</li>
+    <li>em expressões femininas: <em>à noite, à vontade, às pressas, à direita, às vezes</em>.</li>
+  </ul>
+  <h3>Nunca tem crase</h3>
+  <ul>
+    <li>antes de palavra masculina: <em>a pé, a cavalo, a lápis</em>;</li>
+    <li>antes de verbo: <em>começou a chover</em>;</li>
+    <li>antes da maioria dos pronomes: <em>a ela, a você, a esta, a alguém</em>;</li>
+    <li>entre palavras repetidas: <em>cara a cara, frente a frente</em>;</li>
+    <li>com "a" no singular antes de palavra no plural: <em>refiro-me a pessoas honestas</em> (genérico). Se for "as", aí sim: <em>refiro-me às pessoas que vieram</em>.</li>
+  </ul>
+ </div>
+</section>
+
+<section class="chap" id="fluxo">
+ <div class="read">
+  <div class="chap-head"><span class="chap-num">→</span><h2>Passo a passo para qualquer palavra</h2></div>
+  <p>Na dúvida, siga esta ordem. Ela funciona para praticamente todas as palavras do português.</p>
+  <ol class="flow">
+    <li><div><b>Ache a sílaba tônica.</b><p>Chame a palavra de longe e escute onde está a força.</p></div></li>
+    <li><div><b>É proparoxítona?</b><p>Acento. Acabou.</p></div></li>
+    <li><div><b>É oxítona ou monossílabo?</b><p>Termina em a, e, o, em, ens (+s)? Acento. Monossílabos: só a, e, o (+s).</p></div></li>
+    <li><div><b>É paroxítona?</b><p>Termina em a, e, o, em, ens (+s)? Sem acento. Qualquer outra terminação? Acento.</p></div></li>
+    <li><div><b>Confira os casos especiais.</b><p>Tem i ou u tônico em hiato? Ditongo aberto éi, éu, ói em oxítona? É um dos diferenciais (pôde, pôr, têm, vêm)?</p></div></li>
+    <li><div><b>Escolha o sinal.</b><p>Som aberto: agudo (´). Som fechado: circunflexo (^).</p></div></li>
+  </ol>
+ </div>
+</section>
+
+<section id="pratica">
+  <div class="eyebrow">Prática</div>
+  <h2>Exercícios</h2>
+  <p class="muted read">Cada rodada sorteia questões de um banco maior. Responda e veja a correção na hora, com a regra que explica. Quando terminar, clique em "Nova rodada" para treinar com outras palavras.</p>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div class="panel" id="panel" role="tabpanel"></div>
+</section>
+
+<section class="chap" id="cola" style="border-bottom:0">
+  <div class="chap-head"><span class="chap-num">✓</span><h2>Cola rápida</h2></div>
+  <div class="cola">
+    <div><h4>Proparoxítonas</h4><p>Todas levam acento. Inclui as terminadas em ia, ie, io, ua (história, série, água).</p></div>
+    <div><h4>Oxítonas</h4><p>Acento se terminam em a, e, o, em, ens (+s). Sofá, café, avô, também, parabéns.</p></div>
+    <div><h4>Paroxítonas</h4><p>O espelho das oxítonas: acento se <b>não</b> terminam em a, e, o, em, ens. Fácil, lápis, açúcar, álbum.</p></div>
+    <div><h4>Monossílabos tônicos</h4><p>Acento se terminam em a, e, o (+s). Pá, pé, três, nó.</p></div>
+    <div><h4>Hiato i/u</h4><p>i ou u tônico sozinho (ou com s) na sílaba: saúde, país, baú. Não com nh nem com outra letra: rainha, raiz.</p></div>
+    <div><h4>Ditongo aberto</h4><p>éi, éu, ói só em oxítonas e monossílabos: papéis, céu, herói. Paroxítonas não: ideia, jiboia.</p></div>
+    <div><h4>Diferenciais</h4><p>pôde × pode, pôr × por, têm/vêm × tem/vem, contêm × contém. Caíram: para, pelo, pera, polo.</p></div>
+    <div><h4>Sem acento agora</h4><p>voo, enjoo, creem, leem, veem, deem, feiura, linguiça, frequente.</p></div>
+    <div><h4>Crase</h4><p>Troque por masculino: se virar "ao", tem crase. Vou à escola (ao colégio). Nunca antes de masculino ou verbo.</p></div>
+  </div>
+</section>
+
+<footer>Regras de acordo com o Acordo Ortográfico da Língua Portuguesa de 1990, obrigatório no Brasil desde 2016.</footer>
+</main>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- utilidades ---------- */
+function isUpperSyl(p){ return p === p.toUpperCase() && p !== p.toLowerCase(); }
+function parseSyl(s){
+  var parts = s.split("-");
+  var idx = parts.findIndex(isUpperSyl);
+  var low = parts.map(function(p){ return p.toLowerCase(); });
+  return { parts: low, idx: idx, word: low.join("") };
+}
+function classify(p){
+  if (p.parts.length === 1) return "monossílabo";
+  return ["oxítona","paroxítona","proparoxítona"][p.parts.length - 1 - p.idx];
+}
+function sylHTML(s, keepCase){
+  var parts = s.split("-");
+  var idx = parts.findIndex(isUpperSyl);
+  var first = true;
+  return '<span class="w">' + parts.map(function(p, i){
+    var txt = p.toLowerCase();
+    if (keepCase && first && /^[A-ZÁÉÍÓÚÂÊÔ]/.test(s)) { txt = txt.charAt(0).toUpperCase() + txt.slice(1); }
+    first = false;
+    return '<span class="s' + (i === idx ? ' t' : '') + '">' + txt + '</span>';
+  }).join("") + '</span>';
+}
+function esc(t){ return String(t).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+function shuffle(a){ a = a.slice(); for (var i = a.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+function sample(a, n){ return shuffle(a).slice(0, n); }
+function norm(t){ return String(t).trim().toLowerCase().normalize("NFC"); }
+
+/* palavras marcadas na teoria */
+document.querySelectorAll(".w[data-s]").forEach(function(el){
+  var s = el.getAttribute("data-s");
+  var proper = /^(Pa-ra|Pi-au|No-)/.test(s);
+  el.outerHTML = sylHTML(s, proper);
+});
+
+/* ---------- bancos de questões ---------- */
+var TONICA = [
+  ["ca-FÉ"],["ME-sa"],["LÂM-pa-da"],["pa-PEL"],["ru-BRI-ca","Muita gente fala “rúbrica”, mas o certo é ru-BRI-ca."],
+  ["re-COR-de","Não é “récorde”: a força fica no cor."],["gra-TUI-to","O u e o i formam ditongo: gra-TUI-to, e não gra-tu-Í-to."],
+  ["ru-IM","A força fica no im: ru-IM."],["sa-Ú-de"],["ca-JU"],["pu-DI-co","pu-DI-co, e não “púdico”."],
+  ["ma-ra-cu-JÁ"],["ca-DÁ-ver"],["XÍ-ca-ra"],["HO-mem"],["fe-LIZ"],["pro-TÓ-ti-po"],["ÍN-te-rim","ÍN-te-rim tem acento justamente por ser proparoxítona."],
+  ["a-VA-ro","a-VA-ro (avarento), e não “ávaro”."],["re-FÉM"],["a-ba-ca-XI"],["ca-NE-ta"],["Ô-ni-bus"],["a-ÇÚ-car"],["ur-TI-ga"]
+];
+var CLASSIF = ["ja-ca-RÉ","com-pu-ta-DOR","u-ru-BU","pa-ra-BÉNS","tam-BÉM","cha-PÉU","ma-ra-cu-JÁ","a-ba-ca-XI",
+  "LÁ-pis","ca-NE-ta","FÁ-cil","I-tem","a-ÇÚ-car","TÓ-rax","ÓR-fão","i-DEI-a","ja-NE-la","BÍ-ceps",
+  "MÉ-di-co","PÁS-sa-ro","ma-te-MÁ-ti-ca","Ô-ni-bus","PÚ-bli-co","SÁ-ba-do","qui-LÔ-me-tro","ÁR-vo-re"];
+var LEVA = [
+  ["cafe","café","Oxítona terminada em e: leva acento."],
+  ["caju","caju","Oxítona terminada em u: fica sem acento."],
+  ["lapis","lápis","Paroxítona terminada em is: leva acento."],
+  ["mesa","mesa","Paroxítona terminada em a: está no padrão, sem acento."],
+  ["hifen","hífen","Paroxítona terminada em n: leva acento."],
+  ["hifens","hifens","Paroxítona terminada em ens: sem acento. O plural perde o acento."],
+  ["item","item","Paroxítona terminada em em: sem acento."],
+  ["tambem","também","Oxítona terminada em em: leva acento."],
+  ["ideia","ideia","Paroxítona terminada em a. O ditongo aberto ei em paroxítona perdeu o acento no Novo Acordo."],
+  ["heroi","herói","Ditongo aberto ói em oxítona: mantém o acento."],
+  ["voo","voo","Hiato oo: sem acento desde o Novo Acordo."],
+  ["saude","saúde","Hiato: o u tônico fica sozinho na sílaba (sa-ú-de)."],
+  ["rainha","rainha","O i tônico vem antes de nh: sem acento."],
+  ["raiz","raiz","O i tônico divide a sílaba com o z (ra-iz): sem acento."],
+  ["raizes","raízes","Agora o i fica sozinho na sílaba (ra-í-zes): leva acento."],
+  ["pe","pé","Monossílabo tônico terminado em e: leva acento."],
+  ["mim","mim","Monossílabo terminado em im: sem acento."],
+  ["tres","três","Monossílabo tônico terminado em es: leva acento."],
+  ["facil","fácil","Paroxítona terminada em l: leva acento."],
+  ["amavel","amável","Paroxítona terminada em l: leva acento."],
+  ["papeis","papéis","Ditongo aberto éi em oxítona: mantém o acento."],
+  ["jiboia","jiboia","Paroxítona com ditongo aberto oi: perdeu o acento no Novo Acordo."],
+  ["virus","vírus","Paroxítona terminada em us: leva acento."],
+  ["album","álbum","Paroxítona terminada em um: leva acento."],
+  ["Piaui","Piauí","Oxítona com i tônico em hiato, sozinho na sílaba (Pi-au-í): leva acento."],
+  ["tatu","tatu","Oxítona terminada em u: sem acento."],
+  ["lampada","lâmpada","Proparoxítona: todas levam acento."],
+  ["abacaxi","abacaxi","Oxítona terminada em i: sem acento."],
+  ["feiura","feiura","Paroxítona com u tônico depois de ditongo (fei-u-ra): perdeu o acento no Novo Acordo."],
+  ["creem","creem","Hiato ee: sem acento desde o Novo Acordo."],
+  ["bau","baú","O u tônico forma hiato e fica sozinho na sílaba (ba-ú): leva acento."],
+  ["jovens","jovens","Paroxítona terminada em ens: sem acento."],
+  ["carater","caráter","Paroxítona terminada em r: leva acento."],
+  ["parabens","parabéns","Oxítona terminada em ens: leva acento."],
+  ["juiz","juiz","O i tônico divide a sílaba com o z (ju-iz): sem acento."],
+  ["ceu","céu","Ditongo aberto éu em monossílabo: leva acento."]
+];
+var ESCREVA = [
+  ["lampada","lâmpada","","Proparoxítona; o a antes de m soa fechado: â."],
+  ["onibus","ônibus","","Proparoxítona; o o antes de n soa fechado: ô."],
+  ["voce","você","","Oxítona terminada em e, som fechado: ê."],
+  ["avo","avó","a mãe do pai (som aberto)","Oxítona terminada em o, som aberto: ó."],
+  ["avo","avô","o pai do pai (som fechado)","Oxítona terminada em o, som fechado: ô."],
+  ["ciume","ciúme","","Hiato: u tônico sozinho na sílaba (ci-ú-me)."],
+  ["agua","água","","Termina em ditongo crescente (á-gua): leva acento."],
+  ["juri","júri","","Paroxítona terminada em i."],
+  ["util","útil","","Paroxítona terminada em l."],
+  ["eletrica","elétrica","","Proparoxítona, e aberto: é."],
+  ["pessego","pêssego","","Proparoxítona, e fechado: ê."],
+  ["tenis","tênis","","Paroxítona terminada em is; e fechado antes de n: ê."],
+  ["portugues","português","","Oxítona terminada em es, e fechado: ê."],
+  ["armazem","armazém","","Oxítona terminada em em."],
+  ["egoista","egoísta","","Hiato: i tônico com s na sílaba (e-go-ís-ta)."],
+  ["Panama","Panamá","o país","Oxítona terminada em a."],
+  ["ceu","céu","","Ditongo aberto éu em monossílabo."],
+  ["ate","até","","Oxítona terminada em e, som aberto."],
+  ["pantano","pântano","","Proparoxítona; a antes de n soa fechado: â."],
+  ["tunel","túnel","","Paroxítona terminada em l."],
+  ["tuneis","túneis","","Paroxítona terminada em ditongo (eis)."],
+  ["urubu","urubu","","Oxítona terminada em u: sem acento."],
+  ["homem","homem","","Paroxítona terminada em em: sem acento."],
+  ["ruim","ruim","","Oxítona terminada em im: sem acento."],
+  ["ideia","ideia","","Paroxítona terminada em a: sem acento (Novo Acordo)."],
+  ["bonus","bônus","","Paroxítona terminada em us; o fechado antes de n: ô."],
+  ["mes","mês","","Monossílabo tônico terminado em es."],
+  ["saida","saída","","Hiato: i tônico sozinho na sílaba (sa-í-da)."]
+];
+var RULES = {
+  PROP:"Toda proparoxítona é acentuada",
+  OXI:"Oxítona terminada em a, e, o, em, ens",
+  PAROX:"Paroxítona que não termina em a, e, o, em, ens",
+  MONO:"Monossílabo tônico terminado em a, e, o",
+  HIATO:"I ou U tônico em hiato",
+  DIT:"Ditongo aberto (éi, éu, ói) em oxítona ou monossílabo",
+  DIF:"Acento diferencial"
+};
+var PORQUE = [
+  ["pássaro","PROP","pás-sa-ro: tônica na antepenúltima."],
+  ["sofá","OXI","so-fá: oxítona terminada em a."],
+  ["armazém","OXI","ar-ma-zém: oxítona terminada em em."],
+  ["fácil","PAROX","fá-cil: paroxítona terminada em l."],
+  ["vírus","PAROX","ví-rus: paroxítona terminada em us."],
+  ["pá","MONO","Monossílabo tônico terminado em a."],
+  ["mês","MONO","Monossílabo tônico terminado em es."],
+  ["saída","HIATO","sa-í-da: i tônico sozinho na sílaba, logo depois de outra vogal."],
+  ["baú","HIATO","ba-ú: u tônico em hiato. Sem essa regra, oxítona em u não levaria acento."],
+  ["país","HIATO","pa-ís: i tônico em hiato, só com s. Compare com pais (ditongo)."],
+  ["anéis","DIT","a-néis: ditongo aberto éi em oxítona."],
+  ["dói","DIT","Ditongo aberto ói em monossílabo."],
+  ["chapéu","DIT","cha-péu: ditongo aberto éu em oxítona."],
+  ["pôde","DIF","Diferencia o passado (pôde) do presente (pode)."],
+  ["têm","DIF","Diferencia o plural (eles têm) do singular (ele tem)."],
+  ["pôr","DIF","Diferencia o verbo pôr da preposição por."],
+  ["tórax","PAROX","tó-rax: paroxítona terminada em x."],
+  ["ônibus","PROP","ô-ni-bus: tônica na antepenúltima."],
+  ["cipó","OXI","ci-pó: oxítona terminada em o."],
+  ["vendê-lo","OXI","vender + o: a forma vendê é oxítona terminada em e."],
+  ["céu","DIT","Ditongo aberto éu em monossílabo."],
+  ["nós","MONO","Monossílabo tônico terminado em os."],
+  ["faísca","HIATO","fa-ís-ca: i tônico em hiato, só com s na sílaba."],
+  ["caráter","PAROX","ca-rá-ter: paroxítona terminada em r."],
+  ["lâmpada","PROP","lâm-pa-da: tônica na antepenúltima."],
+  ["parabéns","OXI","pa-ra-béns: oxítona terminada em ens."]
+];
+var ACORDO = [
+  ["","ideia","idéia","Ditongo aberto em paroxítona perdeu o acento."],
+  ["","voo","vôo","Hiato oo perdeu o acento."],
+  ["","enjoo","enjôo","Hiato oo perdeu o acento."],
+  ["Eles ___ o jornal.","leem","lêem","Hiato ee perdeu o acento."],
+  ["","linguiça","lingüiça","O trema foi abolido. Só fica em nomes estrangeiros, como Müller."],
+  ["","frequente","freqüente","O trema foi abolido."],
+  ["","heroico","heróico","Paroxítona com ditongo aberto oi: sem acento."],
+  ["","assembleia","assembléia","Paroxítona com ditongo aberto ei: sem acento."],
+  ["","feiura","feiúra","U tônico depois de ditongo em paroxítona: sem acento."],
+  ["O ônibus ___ no ponto.","para","pára","O acento diferencial de para (verbo parar) caiu."],
+  ["O gato soltou muito ___.","pelo","pêlo","O acento diferencial de pelo (cabelo) caiu."],
+  ["","herói","heroi","Ditongo aberto em oxítona continua acentuado."],
+  ["","papéis","papeis","Ditongo aberto em oxítona continua acentuado."],
+  ["","chapéu","chapeu","Ditongo aberto éu em oxítona continua acentuado."],
+  ["Ontem ele não ___ vir.","pôde","pode","O diferencial de pôde (passado) continua."],
+  ["Elas ___ razão.","têm","tem","O diferencial de têm (plural) continua."],
+  ["","boia","bóia","Paroxítona com ditongo aberto oi: sem acento."],
+  ["","Piauí","Piaui","Oxítonas com i tônico depois de ditongo mantêm o acento."],
+  ["","tranquilo","tranqüilo","O trema foi abolido."],
+  ["Espero que eles ___ o recado.","deem","dêem","Hiato ee perdeu o acento."]
+];
+var DIF = [
+  ["Ontem ela não ___ sair.",["pôde","pode"],"pôde","Passado: pôde."],
+  ["Hoje ela não ___ sair.",["pôde","pode"],"pode","Presente: pode."],
+  ["Vou ___ a mesa do jantar.",["pôr","por"],"pôr","Verbo (colocar): pôr."],
+  ["Passei ___ aqui mais cedo.",["pôr","por"],"por","Preposição: por."],
+  ["Eles ___ dois carros.",["têm","tem"],"têm","Plural: eles têm."],
+  ["Ele ___ um carro.",["têm","tem"],"tem","Singular: ele tem."],
+  ["Elas ___ de ônibus amanhã.",["vêm","veem","vem"],"vêm","Verbo vir no plural: elas vêm."],
+  ["Eles ___ o filme toda semana.",["vêm","veem","vem"],"veem","Verbo ver no plural: eles veem (hiato ee, sem acento)."],
+  ["Os cofres ___ muito dinheiro.",["contêm","contém"],"contêm","Plural: contêm."],
+  ["A caixa ___ livros antigos.",["contêm","contém"],"contém","Singular: contém (oxítona terminada em em)."],
+  ["Eles ___ a calma.",["mantêm","mantém"],"mantêm","Plural: mantêm."],
+  ["Ela ___ a calma.",["mantêm","mantém"],"mantém","Singular: mantém."],
+  ["O trem ___ na estação.",["para","pára"],"para","O acento de pára caiu no Novo Acordo."],
+  ["Ele ___ todo dia às 7h.",["vêm","vem"],"vem","Singular: ele vem."],
+  ["Os policiais ___ o suspeito.",["detêm","detém"],"detêm","Plural: detêm."]
+];
+var CRASE = [
+  ["Vou ___ escola.","à","Vou ao colégio: apareceu ao, então tem crase."],
+  ["Vou ___ Bahia.","à","Volto da Bahia: crase há."],
+  ["Vou ___ Curitiba.","a","Volto de Curitiba: crase pra quê?"],
+  ["Chegamos ___ 10 horas.","às","Hora exata: às."],
+  ["Ele foi ___ pé.","a","Antes de palavra masculina não há crase."],
+  ["Comi um bife ___ milanesa.","à","“À moda” escondido: à milanesa."],
+  ["Entreguei o livro ___ ela.","a","Antes de pronome pessoal não há crase."],
+  ["Comecei ___ estudar.","a","Antes de verbo não há crase."],
+  ["Refiro-me ___ pessoas honestas.","a","“a” no singular antes de plural: sentido genérico, sem crase."],
+  ["Refiro-me ___ pessoas que vieram ontem.","às","Pessoas determinadas: a + as = às (aos homens que vieram)."],
+  ["Fui ___ farmácia.","à","Fui ao mercado: tem crase."],
+  ["Ficaram frente ___ frente.","a","Entre palavras repetidas não há crase."],
+  ["Assisti ___ peça.","à","Assisti ao filme: tem crase."],
+  ["Ela pediu ___ conta.","a","Pediu o prato: só artigo, sem preposição. Sem crase."],
+  ["Obedeça ___ regras.","às","Obedeça aos regulamentos: a + as = às."],
+  ["Daqui ___ duas semanas.","a","Tempo futuro: daqui a pouco, daqui a duas semanas."],
+  ["Saímos ___ noite.","à","Expressão feminina: à noite."],
+  ["Ele escreve ___ lápis.","a","Masculino: sem crase."]
+];
+
+/* ---------- construtores de itens ---------- */
+function mkTonica(e){
+  var p = parseSyl(e[0]);
+  return { kind:"syl", parts:p.parts, answer:p.idx,
+    explain: sylHTML(e[0]) + " — " + classify(p) + "." + (e[1] ? " " + esc(e[1]) : "") };
+}
+function mkClassif(s){
+  var p = parseSyl(s), c = classify(p);
+  return { kind:"mc", prompt:'<span class="q-word">' + esc(p.word) + '</span>',
+    options:["oxítona","paroxítona","proparoxítona"], answer:c, explain: sylHTML(s) + " — tônica na " + ({"oxítona":"última","paroxítona":"penúltima","proparoxítona":"antepenúltima"})[c] + " sílaba." };
+}
+function mkLeva(e){
+  var needs = e[0] !== e[1];
+  return { kind:"mc", prompt:'<span class="q-word">' + esc(e[0]) + '</span>',
+    options:["Leva acento","Não leva"], answer: needs ? "Leva acento" : "Não leva",
+    explain:'Escreve-se <b>' + esc(e[1]) + '</b>. ' + esc(e[2]) };
+}
+function mkEscreva(e){
+  return { kind:"input", prompt:'<span class="q-word">' + esc(e[0]) + '</span>' + (e[2] ? ' <span class="q-hint">(' + esc(e[2]) + ')</span>' : ''),
+    answer:e[1], explain:'<b>' + esc(e[1]) + '</b>. ' + esc(e[3]) };
+}
+function mkPorque(e){
+  var others = shuffle(Object.keys(RULES).filter(function(k){ return k !== e[1]; })).slice(0, 3);
+  return { kind:"mc", prompt:'<span class="q-word">' + esc(e[0]) + '</span> <span class="q-hint">tem acento porque…</span>',
+    options: shuffle([e[1]].concat(others)).map(function(k){ return RULES[k]; }), answer:RULES[e[1]], explain:esc(e[2]) };
+}
+function ctxHTML(s){ return '<span class="q-ctx">' + esc(s).replace("___", '<span class="blank">?</span>') + '</span>'; }
+function mkAcordo(e){
+  return { kind:"mc", prompt: e[0] ? ctxHTML(e[0]) + ' <span class="q-hint">Qual é a grafia atual?</span>' : '<span class="q-hint">Qual é a grafia atual?</span>',
+    options: shuffle([e[1], e[2]]), answer:e[1], explain:esc(e[3]) };
+}
+function mkDif(e){ return { kind:"mc", prompt:ctxHTML(e[0]), options:e[1].slice(), answer:e[2], explain:esc(e[3]) }; }
+function mkCrase(e){ return { kind:"mc", prompt:ctxHTML(e[0]), options:["a","à","às"], answer:e[1], explain:esc(e[2]) }; }
+
+var N = 8;
+var EXS = [
+  { id:"tonica", label:"Sílaba tônica", title:"Encontre a sílaba tônica", intro:"Toque na sílaba pronunciada com mais força. Diga a palavra em voz alta, como se chamasse alguém.", build:function(){ return sample(TONICA, N).map(mkTonica); } },
+  { id:"classif", label:"Classifique", title:"Oxítona, paroxítona ou proparoxítona?", intro:"Ache a tônica e conte a partir do fim.", build:function(){ return sample(CLASSIF, N).map(mkClassif); } },
+  { id:"leva", label:"Leva acento?", title:"Leva acento ou não?", intro:"A palavra aparece sem acento nenhum. Decida se a forma correta tem acento.", build:function(){ return sample(LEVA, N).map(mkLeva); } },
+  { id:"escreva", label:"Escreva", title:"Escreva com o acento certo", intro:"Digite a palavra corretamente. Algumas não têm acento: nesse caso, repita como está. Use os botões para inserir letras acentuadas.", build:function(){ return sample(ESCREVA, N).map(mkEscreva); } },
+  { id:"porque", label:"Por que tem acento?", title:"Qual regra explica o acento?", intro:"Todas estas palavras estão corretas. Escolha a regra responsável pelo acento.", build:function(){ return sample(PORQUE, N).map(mkPorque); } },
+  { id:"acordo", label:"Novo Acordo", title:"Grafia antiga ou atual?", intro:"Algumas palavras perderam o acento em 2009; outras continuam iguais. Escolha a grafia em vigor.", build:function(){ return sample(ACORDO, N).map(mkAcordo); } },
+  { id:"dif", label:"Diferencial", title:"Acento diferencial", intro:"Complete a frase com a forma certa.", build:function(){ return sample(DIF, N).map(mkDif); } },
+  { id:"crase", label:"Crase", title:"a, à ou às?", intro:"Use o truque do masculino: se virar “ao”, tem crase.", build:function(){ return sample(CRASE, N).map(mkCrase); } },
+  { id:"misto", label:"Simulado", title:"Simulado misto", intro:"Doze questões sorteadas de todos os tipos. Bom para revisar tudo de uma vez.", build:function(){
+      var pool = [].concat(sample(TONICA,2).map(mkTonica), sample(CLASSIF,1).map(mkClassif), sample(LEVA,2).map(mkLeva),
+        sample(ESCREVA,2).map(mkEscreva), sample(PORQUE,2).map(mkPorque), sample(ACORDO,1).map(mkAcordo), sample(DIF,1).map(mkDif), sample(CRASE,1).map(mkCrase));
+      return shuffle(pool);
+  } }
+];
+
+/* ---------- estado ---------- */
+var best = {};
+try { best = JSON.parse(localStorage.getItem("acento-best") || "{}") || {}; } catch(_) { best = {}; }
+function saveBest(){ try { localStorage.setItem("acento-best", JSON.stringify(best)); } catch(_){} }
+
+var states = {};
+var current = EXS[0].id;
+var lastInput = null;
+function getEx(id){ return EXS.find(function(x){ return x.id === id; }); }
+function newRound(id){ var items = getEx(id).build(); states[id] = { items:items, res:items.map(function(){ return null; }) }; }
+
+/* ---------- abas ---------- */
+var tabsEl = document.getElementById("tabs"), panel = document.getElementById("panel");
+function renderTabs(){
+  tabsEl.innerHTML = EXS.map(function(x){
+    var b = best[x.id];
+    return '<button class="tab" role="tab" id="tab-' + x.id + '" data-tab="' + x.id + '" aria-selected="' + (x.id === current) + '">' + esc(x.label) +
+      (b != null ? '<span class="badge" title="Melhor resultado">' + b + '%</span>' : '') + '</button>';
+  }).join("");
+}
+tabsEl.addEventListener("click", function(ev){
+  var t = ev.target.closest("[data-tab]"); if (!t) return;
+  current = t.getAttribute("data-tab");
+  try { localStorage.setItem("acento-tab", current); } catch(_){}
+  renderTabs(); renderPanel();
+});
+
+/* ---------- painel ---------- */
+function itemHTML(it, i, r){
+  var h = '<li id="q' + i + '" class="' + (r === true ? "right" : r === false ? "wrong" : "") + '">';
+  if (it.kind === "syl"){
+    h += '<div class="q-prompt"><span class="q-hint">Qual é a sílaba tônica?</span></div><div class="opts syl-opts">' +
+      it.parts.map(function(p, k){ return '<button class="opt" data-q="' + i + '" data-v="' + k + '">' + esc(p) + '</button>'; }).join("") + '</div>';
+  } else if (it.kind === "mc"){
+    h += '<div class="q-prompt">' + it.prompt + '</div><div class="opts">' +
+      it.options.map(function(o){ return '<button class="opt" data-q="' + i + '" data-v="' + esc(o) + '">' + esc(o) + '</button>'; }).join("") + '</div>';
+  } else {
+    h += '<div class="q-prompt">' + it.prompt + '</div><form class="inrow" data-form="' + i + '" autocomplete="off">' +
+      '<input id="in-' + current + '-' + i + '" type="text" aria-label="Sua resposta" spellcheck="false" autocapitalize="off">' +
+      '<button type="submit">Conferir</button></form>';
+  }
+  h += '<div class="fb" hidden></div></li>';
+  return h;
+}
+function renderPanel(){
+  if (!states[current]) newRound(current);
+  var ex = getEx(current), st = states[current];
+  var needsPad = st.items.some(function(it){ return it.kind === "input"; });
+  panel.setAttribute("aria-labelledby", "tab-" + current);
+  panel.innerHTML =
+    '<div class="panel-head"><div><h3>' + esc(ex.title) + '</h3><p>' + esc(ex.intro) + '</p></div>' +
+    '<div class="score"><div class="n" id="sc-n"></div><div class="l" id="sc-l"></div><div class="bar"><i id="sc-bar"></i></div></div></div>' +
+    (needsPad ? '<div class="keypad" aria-label="Letras acentuadas"><span>Inserir:</span>' +
+      ["á","â","ã","à","é","ê","í","ó","ô","õ","ú","ç"].map(function(c){ return '<button type="button" data-key="' + c + '">' + c + '</button>'; }).join("") + '</div>' : '') +
+    '<ol class="qs">' + st.items.map(function(it, i){ return itemHTML(it, i, null); }).join("") + '</ol>' +
+    '<div id="done-slot"></div>' +
+    '<div class="panel-foot"><button class="btn ghost" data-new>Nova rodada</button></div>';
+  st.res.forEach(function(r, i){ if (r !== null) paintResult(i, st.items[i], r.v, r.ok); });
+  updateScore();
+}
+function paintResult(i, it, v, ok){
+  var li = document.getElementById("q" + i); if (!li) return;
+  li.className = ok ? "right" : "wrong";
+  if (it.kind === "input"){
+    var inp = li.querySelector("input"), btn = li.querySelector("button");
+    inp.value = v; inp.disabled = true; btn.disabled = true;
+  } else {
+    li.querySelectorAll(".opt").forEach(function(b){
+      var bv = b.getAttribute("data-v"), isAns = it.kind === "syl" ? Number(bv) === it.answer : bv === it.answer;
+      b.disabled = true;
+      if (isAns) b.classList.add("is-right");
+      else if (String(bv) === String(v)) b.classList.add("is-wrong");
+      else b.classList.add("dim");
+    });
+  }
+  var fb = li.querySelector(".fb");
+  fb.hidden = false; fb.className = "fb " + (ok ? "ok" : "bad");
+  fb.innerHTML = '<span class="v">' + (ok ? "Certo!" : "Ainda não.") + '</span> ' +
+    (it.kind === "input" && !ok ? "O correto é " : "") + it.explain;
+}
+function answer(i, v){
+  var st = states[current], it = st.items[i];
+  if (st.res[i] !== null) return;
+  var ok = it.kind === "syl" ? Number(v) === it.answer : it.kind === "input" ? norm(v) === norm(it.answer) : v === it.answer;
+  st.res[i] = { v:v, ok:ok };
+  paintResult(i, it, v, ok);
+  updateScore();
+}
+function updateScore(){
+  var st = states[current], total = st.items.length;
+  var done = st.res.filter(function(r){ return r !== null; }).length;
+  var right = st.res.filter(function(r){ return r && r.ok; }).length;
+  document.getElementById("sc-n").textContent = right + " / " + total;
+  document.getElementById("sc-l").textContent = done === total ? "rodada concluída" : done + " de " + total + " respondidas";
+  document.getElementById("sc-bar").style.width = (done / total * 100) + "%";
+  var slot = document.getElementById("done-slot");
+  if (done === total){
+    var pct = Math.round(right / total * 100);
+    if (best[current] == null || pct > best[current]){ best[current] = pct; saveBest(); renderTabs(); }
+    var msg = pct === 100 ? "Gabaritou! Tente outra rodada ou outro tipo de exercício." :
+      pct >= 75 ? "Muito bem. Releia as explicações das que errou e faça mais uma rodada." :
+      pct >= 50 ? "Bom começo. Volte à teoria das regras que confundiram e tente de novo." :
+      "Vale revisar a teoria (comece pela regra do espelho) e treinar mais uma rodada.";
+    slot.innerHTML = '<div class="done"><p>' + right + " de " + total + " (" + pct + "%). " + msg + '</p><button class="btn" data-new>Nova rodada</button></div>';
+  } else slot.innerHTML = "";
+}
+panel.addEventListener("click", function(ev){
+  var o = ev.target.closest(".opt[data-q]");
+  if (o && !o.disabled){ answer(Number(o.getAttribute("data-q")), o.getAttribute("data-v")); return; }
+  if (ev.target.closest("[data-new]")){ newRound(current); renderPanel(); panel.scrollIntoView({block:"start"}); return; }
+  var k = ev.target.closest("[data-key]");
+  if (k){
+    var inp = lastInput && panel.contains(lastInput) && !lastInput.disabled ? lastInput : panel.querySelector("input:not(:disabled)");
+    if (!inp) return;
+    var s = inp.selectionStart != null ? inp.selectionStart : inp.value.length, e = inp.selectionEnd != null ? inp.selectionEnd : s, ch = k.getAttribute("data-key");
+    inp.value = inp.value.slice(0, s) + ch + inp.value.slice(e);
+    inp.focus(); inp.setSelectionRange(s + ch.length, s + ch.length);
+  }
+});
+panel.addEventListener("mousedown", function(ev){ if (ev.target.closest("[data-key]")) ev.preventDefault(); });
+panel.addEventListener("focusin", function(ev){ if (ev.target.tagName === "INPUT") lastInput = ev.target; });
+panel.addEventListener("submit", function(ev){
+  ev.preventDefault();
+  var f = ev.target.closest("[data-form]"); if (!f) return;
+  var inp = f.querySelector("input");
+  if (!inp.value.trim()){ inp.focus(); return; }
+  var i = Number(f.getAttribute("data-form"));
+  answer(i, inp.value.trim());
+  var next = panel.querySelector("input:not(:disabled)");
+  if (next) next.focus({preventScroll:true});
+});
+
+try { var saved = localStorage.getItem("acento-tab"); if (saved && getEx(saved)) current = saved; } catch(_){}
+renderTabs(); renderPanel();
+})();
+</script>
+
+</body></html>
